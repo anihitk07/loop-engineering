@@ -4,6 +4,8 @@ A repository template that turns GitHub Copilot from a one-shot prompt tool into
 **repeatable delivery loop**: assign an issue, and Copilot plans, builds, tests,
 fixes CI, and opens a merge-ready PR — carrying context across every step.
 
+> 📖 Full write-up: [**Introducing Loop Engineering**](https://medium.com/@valentinaalto/introducing-loop-engineering-ac7a6098bb10?sharedUserId=valentinaalto) on Medium.
+
 ## What is loop engineering?
 
 Most AI-assisted coding is *prompt-centric*: one prompt, one answer, and you
@@ -63,14 +65,15 @@ Everything in between runs on the loop.
 
 ## References
 
-1. Addy Osmani — *Loop Engineering* — https://addyosmani.com/blog/loop-engineering/
-2. cobusgreyling/loop-engineering (patterns & scaffolding) — https://github.com/cobusgreyling/loop-engineering
-3. GitHub Copilot CLI — overview — https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/overview
-4. GitHub Copilot CLI — autopilot — https://docs.github.com/en/copilot/concepts/agents/copilot-cli/autopilot
-5. GitHub Copilot CLI — fleet (parallel subagents) — https://docs.github.com/en/copilot/concepts/agents/copilot-cli/fleet
-6. GitHub Copilot — custom instructions — https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions
-7. GitHub Copilot — skills — https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills
-8. GitHub Copilot — hooks — https://docs.github.com/en/copilot/concepts/agents/hooks
-9. GitHub Copilot — MCP (context/tools) — https://docs.github.com/en/copilot/concepts/context/mcp
-10. GitHub Copilot CLI — scheduling prompts — https://docs.github.com/en/copilot/how-tos/copilot-cli/automate-copilot-cli/schedule-prompts
-11. GitHub Copilot CLI — best practices — https://docs.github.com/en/copilot/how-tos/copilot-cli/cli-best-practices
+1. Valentina Alto — *Introducing Loop Engineering* (Medium) — https://medium.com/@valentinaalto/introducing-loop-engineering-ac7a6098bb10?sharedUserId=valentinaalto
+2. Addy Osmani — *Loop Engineering* — https://addyosmani.com/blog/loop-engineering/
+3. cobusgreyling/loop-engineering (patterns & scaffolding) — https://github.com/cobusgreyling/loop-engineering
+4. GitHub Copilot CLI — overview — https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/overview
+5. GitHub Copilot CLI — autopilot — https://docs.github.com/en/copilot/concepts/agents/copilot-cli/autopilot
+6. GitHub Copilot CLI — fleet (parallel subagents) — https://docs.github.com/en/copilot/concepts/agents/copilot-cli/fleet
+7. GitHub Copilot — custom instructions — https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions
+8. GitHub Copilot — skills — https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills
+9. GitHub Copilot — hooks — https://docs.github.com/en/copilot/concepts/agents/hooks
+10. GitHub Copilot — MCP (context/tools) — https://docs.github.com/en/copilot/concepts/context/mcp
+11. GitHub Copilot CLI — scheduling prompts — https://docs.github.com/en/copilot/how-tos/copilot-cli/automate-copilot-cli/schedule-prompts
+12. GitHub Copilot CLI — best practices — https://docs.github.com/en/copilot/how-tos/copilot-cli/cli-best-practices
