@@ -1,0 +1,26 @@
+{
+  "description": "Guardrails for the delivery loop. Enforces the hard rules from copilot-instructions.md so autonomous slices (P3) and auto-recovery (P5) cannot take unsafe shortcuts.",
+  "hooks": [
+    {
+      "event": "preToolUse",
+      "match": { "tool": "shell" },
+      "when": "command matches 'git push .*(origin )?main'",
+      "action": "block",
+      "message": "Direct pushes to main are not allowed. Use a feature branch and open a PR."
+    },
+    {
+      "event": "preToolUse",
+      "match": { "tool": "shell" },
+      "when": "command matches 'git commit .*--no-verify'",
+      "action": "block",
+      "message": "Bypassing verification hooks is not allowed. Fix the failing checks instead."
+    },
+    {
+      "event": "preToolUse",
+      "match": { "tool": "createPullRequest" },
+      "when": "diff adds source files but no test files changed",
+      "action": "warn",
+      "message": "Opening a PR without tests for new behavior. The loop requires tests before merge (P4)."
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+name: loop-verify
+
+# CI gate for the delivery loop. Makes "verify continuously" (P4) non-negotiable:
+# no PR merges unless lint, tests, and contract checks pass. Runs on every PR
+# and on pushes to feature branches so the auto-recover step (P5) has fast signal.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches-ignore: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit + integration tests
+        run: npm test -- --run
+
+      - name: Contract tests
+        run: npm run test:contract --if-present
+
+  done-condition:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enforce acceptance-criteria checklist
+        # Fail if the PR body still has unchecked acceptance criteria.
+        # This encodes P8: stop only when the issue is truly done.
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if echo "$PR_BODY" | grep -q '\- \[ \]'; then
+            echo "::error::PR still has unchecked acceptance criteria. Done-condition not met."
+            exit 1
+          fi
+          echo "All acceptance criteria checked."

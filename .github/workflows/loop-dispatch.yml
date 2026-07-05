@@ -1,0 +1,75 @@
+name: loop-dispatch
+
+# P0 — TRIGGER for the delivery loop.
+# Polls on a schedule for open issues that are (a) assigned to the repo owner
+# and (b) not yet started, then hands each one off to the Copilot coding agent.
+# This converts the loop from "manually assigned" into a self-starting system.
+#
+# Why a schedule and not only `issues: assigned`? A cron poll is resilient to
+# missed webhooks, backfills issues assigned while Actions was disabled, and
+# lets you throttle how many loops start per cycle. The `issues` event is kept
+# as a fast-path so freshly assigned issues start almost immediately.
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # every 15 minutes
+  issues:
+    types: [assigned]         # fast-path: react immediately on assignment
+  workflow_dispatch: {}        # manual kick for testing
+
+permissions:
+  issues: write
+  contents: read
+
+concurrency:
+  group: loop-dispatch
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find new issues assigned to the owner and start the loop
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Who owns the loop. Defaults to the repo owner; override via variable.
+          OWNER: ${{ vars.LOOP_OWNER || github.repository_owner }}
+          REPO: ${{ github.repository }}
+          # Cap how many loops we start per run to control cost/token spend.
+          MAX_STARTS: "3"
+        run: |
+          set -euo pipefail
+
+          # Candidate issues: open, assigned to OWNER, labeled for the loop,
+          # and NOT already marked as started.
+          issues=$(gh issue list \
+            --repo "$REPO" \
+            --state open \
+            --assignee "$OWNER" \
+            --label "loop" \
+            --json number,labels \
+            --jq '[.[] | select((.labels | map(.name) | index("loop-started")) | not) | .number]')
+
+          count=0
+          for n in $(echo "$issues" | jq -r '.[]'); do
+            if [ "$count" -ge "$MAX_STARTS" ]; then
+              echo "Reached MAX_STARTS=$MAX_STARTS; remaining issues will start next cycle."
+              break
+            fi
+
+            echo "Starting delivery loop for issue #$n"
+
+            # Mark as started FIRST so a retry/overlapping run never double-starts.
+            gh issue edit "$n" --repo "$REPO" --add-label "loop-started"
+
+            # Hand off to the loop: assign the Copilot coding agent and post the
+            # kickoff instruction. Copilot loads .github/copilot-instructions.md
+            # and the deliver-feature skill, then begins at P1 (normalize intent).
+            gh issue edit "$n" --repo "$REPO" --add-assignee "copilot" || true
+            gh issue comment "$n" --repo "$REPO" --body \
+              "@copilot deliver this issue using the standard delivery loop (see .github/copilot-instructions.md). Post the plan first and wait for approval before coding."
+
+            count=$((count+1))
+          done
+
+          echo "Started $count loop(s)."

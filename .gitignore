@@ -1,0 +1,8 @@
+# Impeccable local tooling
+.impeccable/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

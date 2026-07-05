@@ -1,0 +1,63 @@
+name: "Feature (Delivery Loop)"
+description: "File a feature so Copilot can run the standard delivery loop end-to-end."
+title: "[Feature]: "
+labels: ["feature", "loop"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template shapes the issue into the structure the delivery loop
+        expects. Fill every section — the loop treats acceptance criteria as
+        its done-condition.
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: One or two sentences on the outcome and who it's for.
+      placeholder: "Help customers assemble an itinerary through chat on /book."
+    validations:
+      required: true
+
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Functional requirements
+      description: Bullet list of what the feature must do.
+      placeholder: |
+        - Collect origin, destination, dates, passengers, cabin, budget
+        - Return 3 ranked options with rationale
+    validations:
+      required: true
+
+  - type: textarea
+    id: nonfunctional
+    attributes:
+      label: Non-functional constraints
+      description: Performance, accessibility, security, compliance, etc.
+      placeholder: |
+        - p95 latency < 2.5s
+        - Passes accessibility and security checks
+    validations:
+      required: false
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Checkboxes. These are the loop's done-condition.
+      value: |
+        - [ ] Happy path works end-to-end
+        - [ ] Recovery/error path works
+        - [ ] Deterministic behavior for fixed fixtures
+        - [ ] CI green
+    validations:
+      required: true
+
+  - type: input
+    id: out_of_scope
+    attributes:
+      label: Explicitly out of scope
+      description: Anything the loop should NOT touch.
+    validations:
+      required: false
