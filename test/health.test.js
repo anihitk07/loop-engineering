@@ -1,0 +1,17 @@
+import { describe, it, expect } from "vitest";
+import request from "supertest";
+import app from "../src/app.js";
+
+describe("GET /health", () => {
+  it("returns 200 with { status: 'ok' }", async () => {
+    const res = await request(app).get("/health");
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ status: "ok" });
+  });
+
+  it("responds quickly (under 100ms)", async () => {
+    const start = Date.now();
+    await request(app).get("/health");
+    expect(Date.now() - start).toBeLessThan(100);
+  });
+});
