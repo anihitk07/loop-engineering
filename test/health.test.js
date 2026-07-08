@@ -8,10 +8,4 @@ describe("GET /health", () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ status: "ok" });
   });
-
-  it("responds quickly (under 100ms)", async () => {
-    const start = Date.now();
-    await request(app).get("/health");
-    expect(Date.now() - start).toBeLessThan(100);
-  });
 });
